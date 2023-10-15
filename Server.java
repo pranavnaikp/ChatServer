@@ -29,7 +29,6 @@ public class Server implements Runnable{
 		try {
 			server = new ServerSocket(9999);
 			pool = Executors.newCachedThreadPool();
-			 System.out.println("Server started successfully on port 9999.");
 			while(!done) {
 				Socket client = server.accept();
 				ConnectionHandler handler = new ConnectionHandler(client);
@@ -55,6 +54,7 @@ public class Server implements Runnable{
 	public void shutdown() {
 		try {
 			done = true;
+			pool.shutdown();
 			if(server != null && !server.isClosed()) {
 				server.close();
 			}
@@ -74,9 +74,10 @@ public class Server implements Runnable{
 	    private PrintWriter out;
 	    private String nickname;
 
-	    public ConnectionHandler(Socket Client) {
+	    public ConnectionHandler(Socket client) {
 	        this.client = client;
 	    }
+
 
 	    public void run() {
 	        try {
